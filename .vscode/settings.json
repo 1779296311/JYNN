@@ -68,6 +68,14 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "cassert": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "csignal": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "regex": "cpp",
+        "fstream": "cpp",
+        "span": "cpp"
     }
 }

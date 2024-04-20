@@ -8,18 +8,24 @@
 #include "data/facilities/lowerAccess.hpp"
 #include "data/facilities/traits.hpp"
 #include "data/facilities/shape.hpp"
-#include "facilities/contMetaFuns/helper.hpp"
+
 #include "data/tensor.hpp"
 #include "data/trivialTensor.hpp"
 #include "data/biasVector.hpp"
 #include "data/zeroTensor.hpp"
 #include "data/scalableTensor.hpp"
 #include "data/dynamic.hpp"
-#include "operation/facilities/organizer.hpp"
+
+#include "facilities/contMetaFuns/helper.hpp"
 #include "facilities/contMetaFuns/sequential.hpp"
+
+#include "operation/facilities/organizer.hpp"
 #include "operation/facilities/operationFrame.hpp"
 #include "operation/tensor/slice.hpp"
+#include "operation/operator/sigmoid.hpp"
 
+
+#include "policy/policy.hpp"
 // struct A{
 //     using CategoryTag = JYNN::Category::Dim<4>;
 // };
@@ -47,10 +53,83 @@ void Print(const Cont& cont) {
 
 struct Placement {};
 
+
+struct AA{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+struct BB{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+
+struct CC{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+
+struct DD{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+struct EE{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+
+struct FF{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+
+struct GG{
+    using MajorClass = int;
+    using MinorClass = std::string;
+};
+struct HH{
+    using MajorClass = int;
+    using MinorClass = int;
+};
+
+struct II{
+    using MajorClass = int;
+    using MinorClass = char;
+};
+
+struct JJ{
+    using MajorClass = struct II;
+    using MinorClass = struct HH;
+};
+
+struct KK{
+    using MajorClass = struct HH;
+    using MinorClass = struct JJ;
+};
+
+struct LL{
+    using MajorClass = struct LL;
+    using MinorClass = double;
+};
+
+struct MM{
+    using MajorClass = struct HH;
+    using MinorClass = struct JJ;
+};
+
+struct NN{
+    using MajorClass = int;
+    using MinorClass = std::string; 
+};
+
 int main () {
 
     Placement placement;
-
 
     using tensor0 = Tensor<0, int>;
     using Tensor4D = Tensor<4, long long>;
@@ -65,26 +144,66 @@ int main () {
     Tensor3DL G(7, 8, 10);
     Tensor3DL H(7, 8, 10);
     scalaTensor sTensor;
-    for(int i=0; i<7; ++i) {
-        for(int j=0; j<8; ++j) {
-            for(int k=0; k<10; ++k) {
-                G.SetValue(i, j, k, i*100 + j*10 + k);
-                H.SetValue(i, j, k, k*100 + j*10 + i);
-            }
-        }
-    }
+
+//Sigmoid
+    auto x = Sigmoid(A);
+    const auto& xshape = x.GetShape();
+    std::cout << xshape.Count() << std::endl;  
 
 
+
+//Policy Derive
+    using DerivePolicyA = PolicyContainer<struct AA, struct BB, struct CC>;
+    using DerivePolicyB = PolicyContainer<struct DD, struct EE, struct FF, struct GG, struct II, struct HH>;
+    using DerivePolicy = PolicyDerive<DerivePolicyA, DerivePolicyB>;
+std::cout << (std::is_same_v<DerivePolicy, PolicyContainer<struct AA, struct BB, struct CC, struct GG, struct HH>>) << std::endl;
+
+
+//Policy Select Picker Plain Derive Change Get
+    using SubPolicyA = SubPolicyContainer<struct A, struct AA, struct BB, struct CC>;
+    using SubPolicyB = SubPolicyContainer<struct B, Tensor3DF, Tensor3DF, std::string, float>;
+    using SubPolicyC = SubPolicyContainer<struct A, struct DD, struct EE, struct FF, struct GG, struct II, struct HH>;
+    using SubPolicyD = SubPolicyContainer<struct KK, struct LL>;
+
+    using SubPolicyCont = PolicyContainer<SubPolicyA, SubPolicyB, SubPolicyC, struct JJ, SubPolicyD>;
+
+    using PickSubPolicyA = SubPolicyPicker<SubPolicyCont, struct A>;
+std::cout << (std::is_same_v<PickSubPolicyA, PolicyContainer<struct AA, struct BB, struct CC, struct DD, struct EE, struct FF, struct GG, struct II, struct HH, struct JJ>>) << std::endl;
+
+    using ChangedPolicyA = ChangePolicy<struct MM, PickSubPolicyA>;
+std::cout << (std::is_same_v<ChangedPolicyA, PolicyContainer<struct AA, struct BB, struct CC, struct DD, struct EE, struct FF, struct GG, struct II, struct HH, struct JJ, struct MM>>) << std::endl;
+
+    using ChangedPolicyB = ChangePolicy<struct NN, PickSubPolicyA>;
+std::cout << (std::is_same_v<ChangedPolicyB, PolicyContainer<struct AA, struct BB, struct CC, struct DD, struct EE, struct FF, struct II, struct HH, struct JJ, struct NN>>) << std::endl;
+
+    using ChangedPolicyC = ChangePolicy<struct AA, PickSubPolicyA>;
+std::cout << (std::is_same_v<ChangedPolicyC, PolicyContainer<struct GG, struct HH, struct JJ, struct AA>>) << std::endl;
+
+    using GetedPolicyA = PolicyGet<PickSubPolicyA, struct II, struct HH>;
+std::cout << (std::is_same_v<GetedPolicyA, struct JJ>) << std::endl;
+
+    auto ExistPolicyA = PolicyExist<PickSubPolicyA, struct II, struct HH>;
+    auto ExistPolicyB = PolicyExist<PickSubPolicyA, struct II, struct BAD>;
+std::cout << ExistPolicyA << "  " << ExistPolicyB << std::endl;
+
+    // for(int i=0; i<7; ++i) {
+    //     for(int j=0; j<8; ++j) {
+    //         for(int k=0; k<10; ++k) {
+    //             G.SetValue(i, j, k, i*100 + j*10 + k);
+    //             H.SetValue(i, j, k, k*100 + j*10 + i);
+    //         }
+    //     }
+    // }
 //Slice
 
-    using commOperCon = OperandContainer<Tensor4D>;
-    using commOperation = Operation<Placement, commOperCon>;
-    commOperation commOp(A);
-    auto x = commOp[0];
-    auto shapeA = A.GetShape();
-    auto shapex = x.GetShape();
-    std::cout << shapeA.dimSize_ << "   " << shapeA.Count() << std::endl;
-    std::cout << shapex.dimSize_ << "   " << shapex.Count() << std::endl;
+    // using commOperCon = OperandContainer<Tensor4D>;
+    // using commOperation = Operation<Placement, commOperCon>;
+    // commOperation commOp(A);
+    // auto x = commOp[0];
+    // auto shapeA = A.GetShape();
+    // auto shapex = x.GetShape();
+    // std::cout << shapeA.dimSize_ << "   " << shapeA.Count() << std::endl;
+    // std::cout << shapex.dimSize_ << "   " << shapex.Count() << std::endl;
 
 
 
