@@ -5,20 +5,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(JYNN)
 
-add_executable(
-    JYNN
-    main.cpp
-)
+# add_executable(
+#     JYNN
+#     main.cpp
+# )
 
-target_include_directories(
-    JYNN
-    PRIVATE
-    ./
-)
-
-
-# include_directories(
+# target_include_directories(
+#     JYNN
+#     PRIVATE
 #     ./
 # )
-# add_subdirectory(./test)
+
+
+include_directories(
+    ./
+)
+add_subdirectory(./test)
 

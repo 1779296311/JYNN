@@ -1,8 +1,10 @@
 #pragma once
 
 #include "data/facilities/category.hpp"
+#include "operation/facilities/instanceID.hpp"
 
 namespace JYNN {
+
 
 
 template <class...> struct OperandContainer;
@@ -16,14 +18,20 @@ constexpr bool isValidOperand = (isValidCategory<DataCategory<Operands>> && ...)
 
 /// @brief Get operand type
 template <class OpTag, class Operand0, class... Operands>
-struct OperItemType : 
+struct OperItemType_ : 
     std::enable_if<true, typename Operand0::ItemType>
 {};
 
+template <class OpTag, class... Operands>
+using OperItemType = typename OperItemType_<OpTag, Operands...>::type;
+
 template <class OpTag, class Operand0, class... Operands>
-struct OperDeviceType : 
+struct OperDeviceType_ : 
     std::enable_if<true, typename Operand0::DeviceType>  
 {};
+
+template <class OpTag, class... Operands>
+using OperDeviceType = typename OperDeviceType_<OpTag, Operands...>::type;
 
 // deduce the res Category
 template <class Category0, class... Categor1toN>
@@ -113,5 +121,29 @@ template <class... >
 struct OperCalculateChina;
 
 template <class OpTag> struct OperSeq_;
+
+
+
+/// Oper Aux value
+template <class T>
+struct OperAuxValue {
+private:
+    T value_;
+    size_t instID_;
+public:
+    OperAuxValue (T value) :
+        value_(value),
+        instID_(InstanceID::Get()) 
+    {};
+
+    const auto& Value() const {
+        return value_;
+    }
+    bool operator== (const OperAuxValue& other) const {
+        return instID_ == other.instID_;
+    }
+};
+
+
 
 };

@@ -21,7 +21,7 @@
 using namespace JYNN;
 struct Placement{};
 
-TEST(test_data, data){
+TEST(operation, data){
     Placement placement;
     using tensor0 = Tensor<0, int>;
     using Tensor4D = Tensor<4, long long>;
@@ -68,7 +68,7 @@ TEST(test_data, data){
   
 }
 
-TEST(test_operationFrame, operationFrame) {
+TEST(operation, operationFrame) {
     Placement placement;
     using Tensor4D = Tensor<4, long long>;
     Tensor4D  A(2, 7, 8, 10);

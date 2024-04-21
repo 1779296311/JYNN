@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 aux_source_directory(. DIR_SOURCE_ARMA)
 
 add_executable(
-data_and_operation_test  ${DIR_SOURCE_ARMA}
+data_and_operation_test  ${DIR_SOURCE_ARMA} 
 )
 
 find_package(GTest REQUIRED)

@@ -22,7 +22,7 @@ template <class InnerData>
 class DynamicWrapper : public DynamicBase<typename InnerData::CategoryTag, 
                                           typename InnerData::ItemType,
                                           typename InnerData::DeviceType>{
-    using DBase = DynamicBase<typename InnerData::CategoryTag,
+    using Base = DynamicBase<typename InnerData::CategoryTag,
                               typename InnerData::ItemType,
                               typename InnerData::DeviceType>;
 private:
@@ -37,7 +37,7 @@ public:
     const Shape<InnerData::CategoryTag::dim_>& GetShape() const override final {
         return innerData_.GetShape();
     }
-    bool operator== (const DBase& other) const override final {
+    bool operator== (const Base& other) const override final {
         try{
             const auto& dWrapper = dynamic_cast<const DynamicWrapper&>(other);
             return innerData_ == dWrapper.innerData_;
@@ -53,9 +53,9 @@ public:
 template <class Category, class Item, class Device = Device::CPU>
 class DynamicData {
 
-    using DBase = DynamicBase<Category, Item, Device>;
+    using Base = DynamicBase<Category, Item, Device>;
 private:
-    std::shared_ptr<DBase> innerDataWrapper_ { nullptr };
+    std::shared_ptr<Base> innerDataWrapper_ { nullptr };
 
 public:
     using CategoryTag = Category;

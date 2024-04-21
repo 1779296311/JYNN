@@ -1,4 +1,7 @@
+
 #pragma once
+
+#include "facilities/traits.hpp"
 
 namespace JYNN{
 
@@ -16,9 +19,9 @@ namespace Category{
 
 // Valid  Category
 template <class T>
-constexpr static bool isValidCategory {false};
+constexpr  bool isValidCategory {false};
 template <size_t dim>
-constexpr static bool isValidCategory<Category::Dim<dim>> {true} ;
+constexpr  bool isValidCategory<Category::Dim<dim>> {true} ;
 
 // decl
 template <size_t Dim, class Item, class Device>
@@ -43,7 +46,7 @@ struct DataCategory_<T, std::void_t<typename T::CategoryTag>> :
         std::enable_if<true, typename T::CategoryTag>
 {};
 template <class T>
-using DataCategory = typename DataCategory_<T>::type;
+using DataCategory = typename DataCategory_<RmConstRef<T>>::type;
 
 // others
 template <class T, size_t Dim>
