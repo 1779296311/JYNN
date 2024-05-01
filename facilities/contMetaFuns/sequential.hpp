@@ -46,6 +46,7 @@ public:
     template <class Cont>
     constexpr static size_t Size = GetSize<Cont>::size_;
 
+
 // 判断 Cont 两两 之间 是否满足 Fun
     template <class Cont, template <class, class> class Fun>
     constexpr static bool IsUnique = IsUniqueImp<Cont, Fun>::isUnique_;

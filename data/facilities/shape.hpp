@@ -125,6 +125,10 @@ public:
         return dims_[idx];
     }
 
+    auto size() const {
+        return dims_.size();
+    }
+
     auto begin() const {
         return dims_.begin();
     }
@@ -132,6 +136,7 @@ public:
     auto begin() {
         return dims_.begin();
     }
+
 
     decltype(auto) end() const {
         return dims_.end();

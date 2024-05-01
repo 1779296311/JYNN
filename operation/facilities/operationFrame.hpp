@@ -18,10 +18,13 @@ constexpr bool isValidOperand<OpTags::Slice, Operand> {DataCategory<Operand>::di
 template <class OpTag, class Operands, class Policies = PolicyContainer<>>
 class Operation;
 
+
+/************* Class Operation ***************************************************************************/
 template <class OpTag, class... Operands, class TPolicies>
 class Operation <OpTag, OperandContainer<Operands...>, TPolicies> {
-static_assert(sizeof...(Operands) > 0);
-static_assert((std::is_same_v<RmConstRef<Operands>, Operands> && ...));
+
+    static_assert(sizeof...(Operands) > 0);
+    static_assert((std::is_same_v<RmConstRef<Operands>, Operands> && ...));
 
 public:
     using Policies = TPolicies;

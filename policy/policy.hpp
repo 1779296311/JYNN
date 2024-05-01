@@ -1,6 +1,7 @@
 #pragma once
 
 #include "policy/policyContainer.hpp"
+#include "facilities/contMetaFuns/sequential.hpp"
 
 namespace JYNN {
 

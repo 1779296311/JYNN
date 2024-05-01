@@ -1,6 +1,7 @@
 #pragma once
 
 #include "policy/policyMacroBegin.hpp"
+#include "facilities/traits.hpp"
 
 namespace JYNN{
 
